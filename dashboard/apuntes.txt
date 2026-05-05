@@ -1,0 +1,65 @@
+PROYECTO AGROFACTURAS
+====================
+
+ARCHIVOS
+- index.html = estructura de la página
+- style.css = diseño y colores
+- script.js = funciones dinámicas
+- apuntes.txt = notas personales
+
+VARIABLES JS
+- rows = filas de la tabla
+- search = input buscador
+- alertItems = items de alertas
+- alertCards = cajas de alertas
+- metricCards = tarjetas superiores
+
+FUNCIONES
+- Buscador filtra facturas según texto ingresado
+
+IDEAS FUTURAS
+- Botón agregar factura
+- Eliminar factura
+- Editar datos
+- Conectar base de datos
+- Alertas automáticas
+
+ERRORES SOLUCIONADOS
+- querySelector null
+- textContent rojo
+- style.display rojo
+
+PARA EXPOSICIÓN
+Sistema que permite visualizar facturas,
+vencimientos y estados de pago de forma rápida.
+
+
+
+
+JAVA SCRIPT FUNCIONES
+
+
+            BUSCAR FACTURA 
+
+// rows = selecciona todas las filas <tr> dentro del tbody de la tabla
+// se usa para recorrer cada factura y mostrarla / ocultarla
+const rows = document.querySelectorAll("tbody tr");
+
+// search = selecciona el input con clase .search
+// se usa para capturar lo que escribe el usuario en el buscador
+const search = document.querySelector(".search");
+
+// alertItems = selecciona todos los <li> dentro de las tarjetas .alert
+// representa cada factura mostrada en las listas de alertas
+const alertItems = document.querySelectorAll(".alert ul li");
+
+// alertCards = selecciona todas las tarjetas con clase .alert
+// corresponde a las cajas de vencimientos y avisos
+const alertCards = document.querySelectorAll(".alert");
+
+// metricCards = selecciona todas las tarjetas resumen con clase .metric
+// son los cuadros superiores con cantidades y estados
+const metricCards = document.querySelectorAll(".metric");
+
+
+
