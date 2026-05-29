@@ -1,53 +1,64 @@
 import { useState } from "react";
-import api from "../api/api.js";
 import Layout from "../components/Layout.jsx";
 
-const facturaInicial = {
+const initialForm = {
   folio: "",
-  proveedor: "",
-  monto: "",
+  emisor: "",
+  montoTotal: "",
+  fechaEmision: "",
   fechaVencimiento: "",
   estado: "PENDIENTE",
+  usuarioId: "",
 };
 
 function RegistrarFactura() {
-  const [factura, setFactura] = useState(facturaInicial);
+  const [form, setForm] = useState(initialForm);
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
-  const [cargando, setCargando] = useState(false);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setFactura({ ...factura, [name]: value });
-  }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setMensaje("");
     setError("");
 
-    try {
-      setCargando(true);
+    const factura = {
+      folio: form.folio,
+      emisor: form.emisor,
+      montoTotal: Number(form.montoTotal),
+      fechaEmision: form.fechaEmision,
+      fechaVencimiento: form.fechaVencimiento,
+      estado: form.estado,
+      usuarioId: Number(form.usuarioId),
+    };
 
-      // Ajustar estos nombres cuando tengan el DTO real de factura.
-      await api.post("/facturas", {
-        ...factura,
-        monto: Number(factura.monto),
+    try {
+      const response = await fetch("http://localhost:8080/facturas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(factura),
       });
 
-      setMensaje("Factura registrada correctamente.");
-      setFactura(facturaInicial);
-    } catch (error) {
-      const mensajeBack =
-        error.response?.data?.mensaje ||
-        error.response?.data?.message ||
-        "No se pudo registrar la factura. Revisa endpoint y DTO.";
+      if (!response.ok) {
+        throw new Error("No se pudo registrar la factura");
+      }
 
-      setError(mensajeBack);
-    } finally {
-      setCargando(false);
+      setMensaje("Factura registrada correctamente");
+      setForm(initialForm);
+    } catch (err) {
+      setError(err.message);
     }
-  }
+  };
 
   return (
     <Layout>
@@ -60,35 +71,92 @@ function RegistrarFactura() {
         <form className="factura-form" onSubmit={handleSubmit}>
           <div className="input">
             <label htmlFor="folio">Folio</label>
-            <input id="folio" name="folio" value={factura.folio} onChange={handleChange} required />
+            <input
+              id="folio"
+              name="folio"
+              value={form.folio}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="input">
-            <label htmlFor="proveedor">Proveedor</label>
-            <input id="proveedor" name="proveedor" value={factura.proveedor} onChange={handleChange} required />
+            <label htmlFor="emisor">Emisor</label>
+            <input
+              id="emisor"
+              name="emisor"
+              value={form.emisor}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="input">
-            <label htmlFor="monto">Monto</label>
-            <input id="monto" name="monto" type="number" min="1" value={factura.monto} onChange={handleChange} required />
+            <label htmlFor="montoTotal">Monto total</label>
+            <input
+              id="montoTotal"
+              name="montoTotal"
+              type="number"
+              min="1"
+              value={form.montoTotal}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="input">
+            <label htmlFor="fechaEmision">Fecha de emision</label>
+            <input
+              id="fechaEmision"
+              name="fechaEmision"
+              type="date"
+              value={form.fechaEmision}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="input">
             <label htmlFor="fechaVencimiento">Fecha de vencimiento</label>
-            <input id="fechaVencimiento" name="fechaVencimiento" type="date" value={factura.fechaVencimiento} onChange={handleChange} required />
+            <input
+              id="fechaVencimiento"
+              name="fechaVencimiento"
+              type="date"
+              value={form.fechaVencimiento}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="input">
             <label htmlFor="estado">Estado</label>
-            <select id="estado" name="estado" value={factura.estado} onChange={handleChange}>
+            <select
+              id="estado"
+              name="estado"
+              value={form.estado}
+              onChange={handleChange}
+            >
               <option value="PENDIENTE">Pendiente</option>
+              <option value="PROGRAMADA">Programada</option>
               <option value="PAGADA">Pagada</option>
-              <option value="VENCIDA">Vencida</option>
             </select>
           </div>
 
-          <button className="btn-login" type="submit" disabled={cargando}>
-            {cargando ? "Guardando..." : "Guardar factura"}
+          <div className="input">
+            <label htmlFor="usuarioId">ID usuario</label>
+            <input
+              id="usuarioId"
+              name="usuarioId"
+              type="number"
+              min="1"
+              value={form.usuarioId}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button className="btn-login" type="submit">
+            Registrar factura
           </button>
         </form>
       </section>
