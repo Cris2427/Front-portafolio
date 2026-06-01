@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Layout from "../components/Layout.jsx";
-import api from "../api/api.js"
+import api from "../api/api.js";
 
 const initialForm = {
   folio: "",
@@ -49,12 +49,12 @@ function RegistrarFactura() {
     } catch (err) {
       const detalle =
         err.response?.data?.mensaje ||
-        err.response?.data?.mensaje ||
+        err.response?.data?.message ||
         "No se pudo registrar la factura";
       setError(detalle);
     }
   };
-    
+
   return (
     <Layout>
       <section className="card form-card">
