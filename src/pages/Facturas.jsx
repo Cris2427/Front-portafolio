@@ -2,44 +2,16 @@ import { useEffect, useState } from "react";
 import api from "../api/api.js";
 import Layout from "../components/Layout.jsx";
 
-<<<<<<< HEAD
-function colorEstado(estado) {
-  switch (estado) {
-    case "PAGADA":
-      return "green";
-    case "PROGRAMADA":
-      return "blue";
-    case "PENDIENTE":
-      return "orange";
-    default:
-      return "blue";
-  }
-}
-
-function Facturas() {
-  const [facturas, setFacturas] = useState([]);
-  const [busqueda, setBusqueda] = useState("");
-  const [error, setError] = useState("");
-  const [cargando, setCargando] = useState(true);
-=======
 function Dashboard() {
   const [facturas, setFacturas] = useState([]);
->>>>>>> a8716a7 (visual del dashboard)
 
   useEffect(() => {
     async function cargarFacturas() {
       try {
         const { data } = await api.get("/facturas");
         setFacturas(data);
-<<<<<<< HEAD
-      } catch (err) {
-        setError("No se pudieron cargar las facturas.");
-      } finally {
-        setCargando(false);
-=======
       } catch (error) {
         console.error("Error al cargar facturas", error);
->>>>>>> a8716a7 (visual del dashboard)
       }
     }
 
@@ -52,15 +24,9 @@ function Dashboard() {
     (factura) => factura.estado === "PAGADA"
   );
 
-<<<<<<< HEAD
-  return (
-    <Layout searchValue={busqueda} onSearchChange={setBusqueda}>
-      {error && <div className="error visible">{error}</div>}
-=======
   const pendientes = facturas.filter(
     (factura) => factura.estado === "PENDIENTE"
   );
->>>>>>> a8716a7 (visual del dashboard)
 
   const vencenHoy = facturas.filter(
     (factura) => factura.fechaVencimiento === hoy
@@ -185,18 +151,6 @@ function Dashboard() {
           </thead>
 
           <tbody>
-<<<<<<< HEAD
-            {facturasFiltradas.map((factura) => (
-              <tr key={factura.id || factura.folio}>
-                <td>{factura.folio}</td>
-                <td>{factura.emisor}</td>
-                <td>${Number(factura.montoTotal).toLocaleString("es-CL")}</td>
-                <td>{factura.fechaVencimiento}</td>
-                <td>
-                  <span className={`badge ${colorEstado(factura.estado)}`}>
-                    {factura.estado}
-                  </span>
-=======
             {facturas.length > 0 ? (
               facturas.map((factura) => (
                 <tr key={factura.id}>
@@ -242,16 +196,11 @@ function Dashboard() {
                   }}
                 >
                   No hay facturas
->>>>>>> a8716a7 (visual del dashboard)
                 </td>
               </tr>
             )}
           </tbody>
         </table>
-        {cargando && <p>Cargando facturas...</p>}
-        {!cargando && facturasFiltradas.length === 0 && (
-          <p>No hay facturas para mostrar.</p>
-        )}
       </section>
     </Layout>
   );

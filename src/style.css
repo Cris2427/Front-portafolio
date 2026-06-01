@@ -9,19 +9,11 @@
     box-sizing:border-box;
 }
 
-<<<<<<< HEAD
-/* cuerpo */
-body {
-    font-family: "Inter", sans-serif;
-    min-height: 100vh;
-    /* background: #95be9e; */
-=======
 body{
     font-family:"Inter",sans-serif;
     min-height:100vh;
     background:#f0ede8;
     color:#1c1a17;
->>>>>>> a8716a7 (visual del dashboard)
 }
 
 /* LOGIN*/
@@ -38,11 +30,6 @@ body{
     gap: 60px;
     padding: 40px 20px;
 }
-
-
-
-
-
 
 /* Panel izquierdo: branding flotante */
 .panel-izquierdo {
@@ -118,25 +105,9 @@ body{
 }
 
 
-<<<<<<< HEAD
-/* caja formulario */
-.form-box {
-    width: 100%;
-    max-width: 420px;
-    background: rgba(255, 255, 255, 0.632);
-    padding: 34px;
-    border-radius: 18px;
-    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
-}
-
-/* titulo */
-.form-titulo {
-    font-size: 28px;
-=======
 .login-logo span:nth-child(2){
     font-size: 57px;
     font-family: 'Playfair Display', serif;
->>>>>>> a8716a7 (visual del dashboard)
     font-weight: 800;
     color: #fbbf24;
     line-height: 1.4;
@@ -188,26 +159,10 @@ body{
     margin-bottom:6px;
 }
 
-<<<<<<< HEAD
-/* input */
-.input input {
-    width: 100%;
-    min-height: 48px;
-    padding: 14px 18px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 12px;
-    font-size: 15px;
-    font-family: "Inter", sans-serif;
-    background: rgba(255, 255, 255, 0.763);
-    color: #1f2937;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-=======
 .form-subtitulo{
     font-size:13px;
     color:#7a7670;
     margin-bottom:28px;
->>>>>>> a8716a7 (visual del dashboard)
 }
 
 .error{
