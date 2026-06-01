@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "../components/Layout.jsx";
+import api from "../api/api.js";
 
 const initialForm = {
   folio: "",
@@ -41,22 +42,16 @@ function RegistrarFactura() {
     };
 
     try {
-      const response = await fetch("http://localhost:8081/facturas", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(factura),
-      });
-
-      if (!response.ok) {
-        throw new Error("No se pudo registrar la factura");
-      }
+      await api.post("/facturas", factura);
 
       setMensaje("Factura registrada correctamente");
       setForm(initialForm);
     } catch (err) {
-      setError(err.message);
+      const detalle =
+        err.response?.data?.mensaje ||
+        err.response?.data?.message ||
+        "No se pudo registrar la factura";
+      setError(detalle);
     }
   };
 
