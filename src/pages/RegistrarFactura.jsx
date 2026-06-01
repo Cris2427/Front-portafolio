@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../api/api.js";
 import Layout from "../components/Layout.jsx";
 import api from "../api/api.js";
 
@@ -47,11 +48,15 @@ function RegistrarFactura() {
       setMensaje("Factura registrada correctamente");
       setForm(initialForm);
     } catch (err) {
+<<<<<<< HEAD
       const detalle =
         err.response?.data?.mensaje ||
         err.response?.data?.message ||
         "No se pudo registrar la factura";
       setError(detalle);
+=======
+      setError("No se pudo registrar la factura");
+>>>>>>> a8716a7 (visual del dashboard)
     }
   };
 
