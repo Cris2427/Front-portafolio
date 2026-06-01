@@ -57,57 +57,25 @@ function Login() {
       {/* Panel izquierdo */}
       <div className="panel-izquierdo">
 
-  <svg className="deco-plantas" viewBox="0 0 200 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M100 320 C100 320 95 260 80 220 C65 180 30 160 10 130 C40 138 70 155 88 185 C80 150 65 110 50 80 C75 105 95 145 100 185 C105 145 125 105 150 80 C135 110 120 150 112 185 C130 155 160 138 190 130 C170 160 135 180 120 220 C105 260 100 320 100 320Z" fill="white"/>
-    <path d="M100 280 C100 280 85 240 60 210 C35 180 10 175 0 155 C25 165 55 175 75 200 C70 170 60 135 45 110 C68 132 85 168 92 200 C94 168 100 130 108 110 C115 168 121 200 123 200 C143 175 173 165 198 155 C188 175 163 180 138 210 C113 240 100 280 100 280Z" fill="white" opacity="0.6"/>
-    <ellipse cx="60" cy="100" rx="35" ry="22" transform="rotate(-30 60 100)" fill="white" opacity="0.5"/>
-    <ellipse cx="140" cy="100" rx="35" ry="22" transform="rotate(30 140 100)" fill="white" opacity="0.5"/>
-    <ellipse cx="40" cy="155" rx="30" ry="18" transform="rotate(-20 40 155)" fill="white" opacity="0.4"/>
-    <ellipse cx="160" cy="155" rx="30" ry="18" transform="rotate(20 160 155)" fill="white" opacity="0.4"/>
-  </svg>
 
-  <svg className="deco-plantas-top" viewBox="0 0 200 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M100 320 C100 320 95 260 80 220 C65 180 30 160 10 130 C40 138 70 155 88 185 C80 150 65 110 50 80 C75 105 95 145 100 185 C105 145 125 105 150 80 C135 110 120 150 112 185 C130 155 160 138 190 130 C170 160 135 180 120 220 C105 260 100 320 100 320Z" fill="white"/>
-    <ellipse cx="60" cy="100" rx="35" ry="22" transform="rotate(-30 60 100)" fill="white" opacity="0.5"/>
-    <ellipse cx="140" cy="100" rx="35" ry="22" transform="rotate(30 140 100)" fill="white" opacity="0.5"/>
-  </svg>
 
-  {/* Logo */}
-  <div className="login-logo">
-    <span>Agricola</span>
-    <span>El</span>
-    <span>Capricho</span>
-    <span>SPA</span>
-  </div>
+        <div className="login-logo">
+          <span>Agricola</span>
+          <span>El</span>
+          <span>Capricho</span>
+          <span>SPA</span>
+        </div>
+        <div className="panel-divisor">
+          <div className="panel-divisor-linea" />
+          <div className="panel-divisor-punto" />
+          <div className="panel-divisor-linea" />
+        </div>
 
-  {/* Badges decorativos — llenan el espacio del medio */}
-  <div className="panel-centro">
-    <div className="panel-badges">
-      <div className="panel-badge">
-        <div className="panel-badge-icono">📋</div>
-        <span>Gestión de facturas y boletas</span>
+        <p className="panel-descriptivo">
+          Sistema de gestion de facturas y vencimientos interno
+        </p>
+
       </div>
-      <div className="panel-badge">
-        <div className="panel-badge-icono">⏰</div>
-        <span>Control de vencimientos automático</span>
-      </div>
-      <div className="panel-badge">
-        <div className="panel-badge-icono">📊</div>
-        <span>Reportes y resumen financiero</span>
-      </div>
-      <div className="panel-badge">
-        <div className="panel-badge-icono">🔒</div>
-        <span>Acceso seguro por usuario y rol</span>
-      </div>
-    </div>
-  </div>
-
-  {/* Descripción pie */}
-  <p className="panel-descriptivo">
-    Sistema de gestion de facturas y vencimientos interno
-  </p>
-
-</div>
 
       {/* Panel derecho */}
       <div className="panel-derecho">
