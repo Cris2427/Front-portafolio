@@ -1,12 +1,15 @@
 /* Login Styles */
 
+
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
 
 *,*:_before,*:after{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 
 :root{
     --verde-oscuro: #14532d;
@@ -17,187 +20,166 @@
     --borde: #d1d5db;
 }
 
+
 .login-page{
-    min-height: 100vh;
+   min-height: 100vh;
     width: 100vw;
-    display: grid;
-    grid-template-columns: 1.5fr 1.3fr;
-    font-family: 'DM Sans', sans-serif;
-    background: #0f2d1a;
-    background: radial-gradient(ellipse 80% 60% at 20% 100%, rgba(22,101,52,0.45) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 85% 10%,  rgba(146,64,14,0.25) 0%, transparent 55%);
-}
-
-.login-page > .panel-izquierdo {
-    flex: 4;
-    max-width: 600px;
-    max-height: 700px;
-}
-.login-page > .panel-derecho{
-    flex: 4;
-    max-width: 500px;
-    max-height: 700px;
-}
-/* ── panel izquierdo: ocupa 100% de su columna ── */
-.panel-izquierdo {
-    background: linear-gradient(160deg, #1a6b38 0%, #0a2016 100%);
-    min-height: 100vh;
-    width: 100%;
-    margin-left: -208px;
-    padding: 74px 92px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-    border-radius: 22px 22px 22px 22px;
-}
- 
-/* línea diagonal decorativa */
-.panel-izquierdo::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    border: 40px solid rgba(255,255,255,0.04);
-    display: block;
-}
- 
-/* cuadrado rotado abajo */
-.panel-izquierdo::after {
-    content: '';
-    position: absolute;
-    bottom: -80px;
-    right: -80px;
-    width: 300px;
-    height: 300px;
-    border-radius: 40px;
-    background: rgba(255,255,255,0.035);
-    transform: rotate(20deg);
-    display: block;
-}
-
-
-
-/* ── bloque central del panel izquierdo ── */
-.panel-centro {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20%;
-}
- 
-.panel-divisor {
-    position: relative;
-    z-index: 1;
     display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    position: relative;
+    overflow: hidden;
+    gap: 60px;
+    padding: 40px 20px;
 }
- 
-.panel-divisor-linea {
-    height: 1px;
-    width: 48px;
-    background: rgba(251,191,36,0.5);
-}
- 
-.panel-divisor-punto {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(251,191,36,0.5);
-}
-.login-logo{
+
+
+
+
+
+
+/* Panel izquierdo: branding flotante */
+.panel-izquierdo {
     position: relative;
     z-index: 1;
+    background: transparent;
+    min-height: auto;
+    width: auto;
+    max-width: 300px;
+    margin-left: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: visible;
+    border-radius: 0;
+}
+ 
+.login-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('./assets/Agricola-El-Capricho-1.jpg') center/cover no-repeat;
+    z-index: -2;
+}
+
+
+/* ✅ OVERLAY VERDE — va en login-page::after */
+.login-page::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(10,40,20,0.82) 0%, rgba(10,40,20,0.60) 100%);
+    z-index: -1;
+}
+
+
+.panel-izquierdo::before,
+.panel-izquierdo::after {
+    display: none; /* Elimina los círculos decorativos del panel */
+}
+
+
+.login-logo{
+    position: relative;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     gap: 0;
 }
 
+
 .login-logo span:nth-child(4){
     order: 1;
-    font-size: 14px;
-    font-weight:790;
+    font-size: 26px;
+    font-weight:800;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.356);
     margin-bottom: 30px;
     margin-top: 16px;
 
+
 }
 
+
 .login-logo span:nth-child(1){
-    font-size: 36px;
+    font-size: 62px;
     font-family: 'Playfair Display', serif;
     font-weight: 800;
     color: #ffffff;
-    line-height: 1.4;
+    line-height: 1.6;
 }
 
+
 .login-logo span:nth-child(2){
-    font-size: 36px;
+    font-size: 57px;
     font-family: 'Playfair Display', serif;
     font-weight: 800;
     color: #fbbf24;
     line-height: 1.4;
 }
 
+
 .login-logo span:nth-child(3){
-    font-size: 36px;
+    font-size: 62px;
     font-family: 'Playfair Display', serif;
     font-weight: 800;
     color: #ffffff;
     line-height: 1.4;
 }
 
+
 .panel-descriptivo{
     position: relative;
     z-index: 1;
     color: rgba(255, 255, 255, 0.85);
-    font-size: 14px;
+    font-size: 19px;
+    font-family: 'Times New Roman', Times, serif;
     line-height: 2;
     border-left: 16px;
-    padding: 14px;
-    max-width: 300%;
+    padding: 9px;
+    max-width: 400%;
     text-align:left;
 }
 
+
 /* ---------- panel derecho (formulario) ---------- */
 .panel-derecho {
-    background: var(--crema);
-    padding: 48px 40px;
-    border-radius: 22px 22px 22px 22px;
+   position: relative;
+    z-index: 1;
+    padding: 44px 40px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 28px 70px rgba(10,40,20,0.45);
+    box-shadow: 32px 32px 80px rgba(0, 0, 0, 0.4);
+    max-width: 450px;
+    width: 100%;
 }
 
+
 /* ---------- caja formulario ---------- */
-.form-box {
-    width: 100%;
-    max-width: 380px;
-}
+
+
  
 /* ---------- títulos ---------- */
 .form-titulo {
     font-family: 'Playfair Display', serif;
-    font-size: 32px;
+    font-size: 42px;
     font-weight: 700;
     color: var(--verde-oscuro);
     margin-bottom: 8px;
 }
  
 .form-subtitulo {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--gris-muted);
     margin-bottom: 28px;
 }
+
+
 
 
 /* ---------- error ---------- */
@@ -239,7 +221,7 @@
     border-radius: 10px;
     font-size: 14px;
     font-family: 'DM Sans', sans-serif;
-    background: #ffffff;
+    background: #ffffffa3;
     color: #1f2937;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -260,7 +242,7 @@
     height: 52px;
     margin-top: 10px;
     background: var(--verde-oscuro);
-    color: #ffffff;
+    color: #ffffffb3;
     font-size: 14px;
     font-weight: 600;
     font-family: 'DM Sans', sans-serif;

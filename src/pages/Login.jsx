@@ -72,7 +72,7 @@ function Login() {
         </div>
 
         <p className="panel-descriptivo">
-          Sistema de gestion de facturas y vencimientos interno
+          Sistema de gestion de facturas 
         </p>
 
       </div>

@@ -95,7 +95,7 @@ body {
 .form-box {
     width: 100%;
     max-width: 420px;
-    background: white;
+    background: rgba(255, 255, 255, 0.632);
     padding: 34px;
     border-radius: 18px;
     box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
@@ -157,7 +157,7 @@ body {
     border-radius: 12px;
     font-size: 15px;
     font-family: "Inter", sans-serif;
-    background: white;
+    background: rgba(255, 255, 255, 0.763);
     color: #1f2937;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
