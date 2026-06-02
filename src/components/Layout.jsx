@@ -13,6 +13,7 @@ function obtenerIniciales(nombre = "Usuario") {
 function Layout({ children, searchValue = "", onSearchChange }) {
   const navigate = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+  const esAdmin = usuario.rol === "ROLE_ADMINISTRADOR";
 
   function cerrarSesion() {
     localStorage.removeItem("token");
@@ -41,6 +42,11 @@ function Layout({ children, searchValue = "", onSearchChange }) {
           <NavLink to="/registrarfactura" className="nav-item">
             Registrar factura
           </NavLink>
+          {esAdmin && (
+            <NavLink to="/papelera" className="nav-item">
+              Papelera
+            </NavLink>
+          )}
         </nav>
       </aside>
 

@@ -3,6 +3,7 @@ import Dashboard from "./pages/Dashboard"
 import Facturas from "./pages/Facturas"
 import Login from "./pages/Login"
 import RegistrarFactura from "./pages/RegistrarFactura";
+import Papelera from "./pages/Papelera";
 
 function RutaPrivada({ children}) {
    const token = localStorage.getItem("token");
@@ -46,6 +47,14 @@ function App() {
         element={
           <RutaPrivada>
             <RegistrarFactura />
+          </RutaPrivada>
+        }
+      />
+            <Route
+        path="/papelera"
+        element={
+          <RutaPrivada>
+            <Papelera />
           </RutaPrivada>
         }
       />
