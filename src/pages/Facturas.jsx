@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../api/api.js";
 import Layout from "../components/Layout.jsx";
 
+// Asignamos el color correcto dependiendo del estado real en la base de datos
 function colorEstado(estado) {
   switch (estado) {
     case "PAGADA":
@@ -27,9 +28,11 @@ function Facturas() {
     async function cargarFacturas() {
       try {
         const { data } = await api.get("/facturas");
-        setFacturas(data);
+        // Aseguramos que sea un arreglo por si la API responde vacío
+        setFacturas(Array.isArray(data) ? data : []);
       } catch (err) {
         setError("No se pudieron cargar las facturas.");
+        console.error(err);
       } finally {
         setCargando(false);
       }
@@ -40,7 +43,7 @@ function Facturas() {
 
     async function eliminarFactura(id) {
     const confirmar = window.confirm(
-      "¿Seguro que quieres elminar esta factura?"
+      "¿Seguro que quieres eliminar esta factura?"
     );
     if (!confirmar) return;
 
@@ -49,11 +52,13 @@ function Facturas() {
       setFacturas((prev) => prev.filter((factura) => factura.id !== id));
     } catch (err) {
       setError("No se pudo eliminar la factura.")
+      console.error(err);
     }
   }
 
+  // Lógica para el buscador de la barra superior (Layout)
   const facturasFiltradas = facturas.filter((factura) =>
-    String(factura.folio).toLowerCase().includes(busqueda.toLowerCase())
+    factura.folio?.toString().toLowerCase().includes(busqueda.toLowerCase())
   );
 
   return (
@@ -62,6 +67,7 @@ function Facturas() {
 
       <section className="card table-card">
         <div className="table-header">Facturas</div>
+
         <table>
           <thead>
             <tr>
@@ -73,12 +79,13 @@ function Facturas() {
               <th>Acciones</th>
             </tr>
           </thead>
+
           <tbody>
             {facturasFiltradas.map((factura) => (
               <tr key={factura.id || factura.folio}>
                 <td>{factura.folio}</td>
                 <td>{factura.emisor}</td>
-                <td>${Number(factura.montoTotal).toLocaleString("es-CL")}</td>
+                <td>${Number(factura.montoTotal || 0).toLocaleString("es-CL")}</td>
                 <td>{factura.fechaVencimiento}</td>
                 <td>
                   <span className={`badge ${colorEstado(factura.estado)}`}>
@@ -100,9 +107,17 @@ function Facturas() {
             ))}
           </tbody>
         </table>
-        {cargando && <p>Cargando facturas...</p>}
+
+        {cargando && (
+          <p style={{ textAlign: "center", padding: "20px" }}>
+            Cargando facturas...
+          </p>
+        )}
+
         {!cargando && facturasFiltradas.length === 0 && (
-          <p>No hay facturas para mostrar.</p>
+          <p style={{ textAlign: "center", padding: "20px" }}>
+            No hay facturas para mostrar.
+          </p>
         )}
       </section>
     </Layout>

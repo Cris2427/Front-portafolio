@@ -7,15 +7,12 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((config)=> {
   const token = localStorage.getItem("token");
-  const tipoToken = localStorage.getItem("tipoToken") || "Bearer";
-
   if (token) {
-    config.headers.Authorization = `${tipoToken} ${token}`;
+    config.headers.Authorization= `Bearer ${token}`;
   }
-
   return config;
-});
+})
 
 export default api;

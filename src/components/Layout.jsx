@@ -38,7 +38,7 @@ function Layout({ children, searchValue = "", onSearchChange }) {
           <NavLink to="/facturas" className="nav-item">
             Facturas
           </NavLink>
-          <NavLink to="/registrar-factura" className="nav-item">
+          <NavLink to="/registrarfactura" className="nav-item">
             Registrar factura
           </NavLink>
         </nav>

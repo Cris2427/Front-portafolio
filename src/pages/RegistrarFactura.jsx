@@ -19,7 +19,6 @@ function RegistrarFactura() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setForm({
       ...form,
       [name]: value,
@@ -100,7 +99,7 @@ function RegistrarFactura() {
           </div>
 
           <div className="input">
-            <label htmlFor="fechaEmision">Fecha de emision</label>
+            <label htmlFor="fechaEmision">Fecha de emisión</label>
             <input
               id="fechaEmision"
               name="fechaEmision"

@@ -1,517 +1,572 @@
-/* reset general */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@700;800&family=Playfair+Display:wght@700;800&display=swap');
+
+/* =========================
+   RESET & BASICS
+========================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* cuerpo */
 body {
     font-family: "Inter", sans-serif;
     min-height: 100vh;
-    /* background: #95be9e; */
+    background: #f0ede8;
+    color: #1c1a17;
 }
 
-/* pagina login */
-.login-page {
+/* Base compartida para fondos con la imagen agrícola corporativa */
+.login-page, .app {
     min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr;
-    place-items: center;
-    padding: 32px;
-    background: #268a4128;
+    position: relative;
+    overflow-x: hidden;
 }
 
-/* contenedor de marca */
+/* Efecto de fondo y overlay unificado */
+.login-page::before, .app::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('./assets/Agricola-El-Capricho-1.jpg') center/cover no-repeat fixed;
+    z-index: -2;
+}
+
+.login-page::after, .app::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(10,40,20,0.88) 0%, rgba(10,40,20,0.75) 100%);
+    z-index: -1;
+}
+
+/* =========================
+   LOGIN
+========================= */
+.login-page {
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    padding: 40px 20px;
+}
+
 .panel-izquierdo {
-    width: 100%;
-    max-width: 420px;
-    min-height: auto;
+    position: relative;
+    z-index: 1;
     background: transparent;
-    padding: 0;
-    margin-bottom: 20px;
-    overflow: visible;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* se ocultan los circulos decorativos */
-.panel-izquierdo::before,
-.panel-izquierdo::after {
-    display: none;
-}
-
-/* logo */
 .login-logo {
     display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 26px;
-    font-weight: 800;
-    margin-bottom: 8px;
-    text-align: center;
-}
-
-/* colores del logo */
-.login-logo span:nth-child(1) {
-    color: #166534;
-}
-
-.login-logo span:nth-child(2) {
-    color: #b7791f;
-}
-
-.login-logo span:nth-child(3) {
-    color: #166534;
+    flex-direction: column;
 }
 
 .login-logo span:nth-child(4) {
-    color: #6b7280;
-    font-size: 13px;
-    font-weight: 500;
+    order: 1;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    margin-bottom: 30px;
+    margin-top: 16px;
 }
 
-/* descripcion */
+.login-logo span:nth-child(1),
+.login-logo span:nth-child(3) {
+    font-size: 62px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.4;
+}
+
+.login-logo span:nth-child(2) {
+    font-size: 57px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    color: #fbbf24; /* Dorado Premium */
+    line-height: 1.4;
+}
+
 .panel-descriptivo {
-    max-width: 420px;
-    padding: 0;
-    text-align: center;
-    color: #f4f4f4;
-    font-size: 14px;
-    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 19px;
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 2;
+    padding: 9px;
 }
 
-/* panel del formulario */
 .panel-derecho {
     width: 100%;
-    flex: none;
     display: flex;
     justify-content: center;
-    padding: 0;
+    z-index: 1;
 }
 
-/* caja formulario */
 .form-box {
     width: 100%;
     max-width: 420px;
-    background: rgba(255, 255, 255, 0.632);
-    padding: 34px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(255,255,255,0.2);
     border-radius: 18px;
-    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+    padding: 36px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
 }
 
-/* titulo */
 .form-titulo {
+    font-family: "Playfair Display", serif;
     font-size: 28px;
     font-weight: 800;
-    color: #111827;
+    color: #1a4a2e;
     margin-bottom: 6px;
 }
 
-/* subtitulo */
 .form-subtitulo {
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 30px;
+    font-size: 13px;
+    color: #5a5650;
+    margin-bottom: 28px;
 }
 
-/* mensaje error */
+/* Componentes de Formulario Genéricos (Usa tanto Login como Registrar Factura) */
 .error {
     display: none;
-    background: #fee2e2;
-    color: #b91c1c;
+    background: #fef2f2;
+    color: #9b1c1c;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border-left: 4px solid #ef4444;
+    margin-bottom: 18px;
     font-size: 13px;
     font-weight: 600;
-    padding: 12px 16px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border-left: 4px solid #ef4444;
 }
 
-/* mostrar error */
 .error.visible {
     display: block;
 }
 
-/* grupo input */
-.input {
-    margin-bottom: 20px;
-}
-
-/* label */
-.input label {
-    display: block;
+.success {
+    background: #f0fdf4;
+    color: #14532d;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border-left: 4px solid #22c55e;
+    margin-bottom: 18px;
     font-size: 13px;
     font-weight: 600;
-    color: #374151;
+}
+
+.input {
+    margin-bottom: 18px;
+}
+
+.input label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #5a5650;
     margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
 }
 
-/* input */
-.input input {
+.input input, .input select {
     width: 100%;
-    min-height: 48px;
-    padding: 14px 18px;
-    border: 1.5px solid #e5e7eb;
+    height: 48px;
+    padding: 0 16px;
+    border: 1.5px solid #ddd9d2;
     border-radius: 12px;
-    font-size: 15px;
-    font-family: "Inter", sans-serif;
-    background: rgba(255, 255, 255, 0.763);
-    color: #1f2937;
+    background: #f8f6f2;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 14px;
+    color: #1c1a17;
+    transition: .15s;
 }
 
-/* input activo */
-.input input:focus {
-    border-color: #166534;
-    box-shadow: 0 0 0 4px rgba(22, 101, 52, 0.10);
+.input input:focus, .input select:focus {
+    border-color: #1a4a2e;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(26,74,46,.12);
 }
 
-/* boton */
 .btn-login {
     width: 100%;
-    min-height: 50px;
-    padding: 15px;
-    background: #166534;
-    color: white;
-    font-size: 15px;
-    font-weight: 700;
-    font-family: "Inter", sans-serif;
+    height: 48px;
     border: none;
     border-radius: 12px;
+    background: #1a4a2e;
+    color: white;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .15s;
 }
 
-/* hover boton */
 .btn-login:hover {
-    opacity: 0.92;
+    background: #153d25;
 }
 
-/* click boton */
-.btn-login:active {
-    transform: scale(0.98);
-}
-
-/* boton desactivado */
-.btn-login:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* texto boton */
-.btn-texto {
-    display: block;
-}
-
-/* responsive */
-@media (max-width: 768px) {
-    .login-page {
-        padding: 22px;
-    }
-
-    .form-box {
-        padding: 28px;
-    }
-
-    .login-logo {
-        font-size: 23px;
-    }
-}
-
-/* contenedor principal del dashboard */
+/* =========================
+   ESTRUCTURA DEL DASHBOARD
+========================= */
 .app {
     display: flex;
-    min-height: 100vh;
-    background: #f4f6f8;
+    z-index: 1;
 }
 
-/* barra lateral izquierda */
+/* SIDEBAR REFINADA */
 .sidebar {
-    width: 220px;
+    width: 240px;
     min-height: 100vh;
-    background: linear-gradient(#1e1152, #046427);
-    color: white;
+    background: rgba(15, 35, 20, 0.95);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(10px);
 }
 
-/* logo de la barra lateral */
 .logo {
     display: flex;
     flex-direction: column;
-    font-size: 18px;
-    font-weight: 800;
     line-height: 1.2;
     margin-bottom: 40px;
 }
 
-/* color palabra Agricola */
-.logo span:nth-child(1) {
-    color: #22e045;
-}
-
-/* color palabra El */
-.logo span:nth-child(2) {
-    color: #d49932;
-}
-
-/* color palabra Capricho */
+.logo span:nth-child(1),
 .logo span:nth-child(3) {
-    color: #22e045;
+    font-family: "Playfair Display", serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: #ffffff;
 }
 
-/* estilo texto SPA */
+.logo span:nth-child(2) {
+    font-family: "Playfair Display", serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #fbbf24; /* Dorado del Login */
+    margin: 2px 0;
+}
+
 .logo span:nth-child(4) {
-    color: rgba(255,255,255,0.5);
-    font-size: 12px;
-    font-weight: 400;
+    margin-top: 8px;
+    font-size: 10px;
+    letter-spacing: .15em;
+    color: rgba(255,255,255,.3);
+    text-transform: uppercase;
 }
 
-/* menu lateral */
 .nav {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
-/* links del menu */
 .nav-item {
-    color: white;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
     text-decoration: none;
-    padding: 10px 16px;
-    border-radius: 10px;
+    color: rgba(255,255,255,.75);
+    font-size: 14px;
+    font-weight: 500;
+    transition: .2s;
 }
 
-/* efecto al pasar el mouse por el menu */
 .nav-item:hover {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,.08);
+    color: #ffffff;
 }
 
-/* pagina activa del menu */
 .nav-item.active {
-    background: white;
-    color: #14532d;
-    font-weight: 700;
+    background: #fbbf24;
+    color: #0f2314;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
 }
 
-/* zona principal derecha */
+/* MAIN CONTAINER */
 .main {
     flex: 1;
-    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 
-/* barra superior del dashboard */
+/* =========================
+   TOPBAR & AVATAR CORREGIDOS
+========================= */
 .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    padding: 20px 30px;
+    /* Convertida en una tarjeta flotante semi-transparente */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    margin: 28px 28px 10px 28px; /* Separación para que no choque con los bordes */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-/* input buscador */
 .search {
     width: 320px;
-    padding: 14px 18px;
-    border: none;
+    height: 44px;
+    border: 1.5px solid #ddd9d2;
     border-radius: 12px;
-    background: white;
-    font-size: 15px;
+    background: #f8f6f2;
+    padding: 0 18px;
+    font-size: 13px;
     outline: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: .15s;
 }
 
-/* contenedor usuario */
+.search:focus {
+    border-color: #1a4a2e;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(26,74,46,.1);
+}
+
+/* Contenedor del usuario y botón salir */
 .user {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px; /* Más espacio entre elementos */
 }
 
-/* circulo avatar usuario */
+/* El círculo con la inicial */
 .avatar {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: #f1a9d6;
-    color: white;
+    background: #1a4a2e; /* Verde corporativo */
+    color: #fbbf24;     /* Inicial en Dorado Premium del login */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
+    font-family: "Sora", sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(26, 74, 46, 0.25);
+    border: 2px solid white; /* Anillo blanco para destacar */
+    flex-shrink: 0; /* Evita que se deforme en pantallas chicas */
 }
 
-/* boton cerrar sesion */
 .logout {
-    border: none;
+    border: 1.5px solid #ddd9d2;
     background: white;
-    color: #14532d;
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-weight: 700;
+    color: #5a5650;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
+    transition: .15s;
+    height: 42px; /* Misma altura que el avatar para perfecta simetría */
+    display: flex;
+    align-items: center;
 }
 
-/* contenido principal */
+.logout:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+/* Ajuste sutil para el contenedor de contenido para que no choque */
 .content {
+    padding: 18px 28px 28px 28px; /* Margen superior adaptado a la nueva barra */
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
-
-/* estilo general de tarjetas */
-.card {
-    background: white;
-    border-radius: 18px;
-    padding: 22px;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.05);
-}
-
-/* grilla de tarjetas superiores */
+/* =========================
+   TARJETAS DE MÉTRICAS (Efecto Glassmorphism Elevado)
+========================= */
 .metrics {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    gap: 16px;
 }
 
-/* titulo de tarjeta metrica */
+.metric {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 18px;
+    padding: 24px;
+    min-height: 130px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* La tarjeta crítica "Vencen Hoy" adopta el color verde profundo de identidad */
+.metric:first-child {
+    background: #1a4a2e;
+    border-color: #1a4a2e;
+    box-shadow: 0 10px 25px rgba(26, 74, 46, 0.3);
+}
+
 .metric-title {
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #6a6660;
 }
 
-/* numero grande de metrica */
+.metric:first-child .metric-title {
+    color: rgba(255,255,255,0.6);
+}
+
 .metric-value {
-    font-size: 30px;
+    font-family: "Playfair Display", serif;
+    font-size: 42px;
     font-weight: 800;
+    color: #1c1a17;
+    line-height: 1;
 }
 
-/* borde rojo para vencen hoy */
-.metric.red {
-    border-left: 6px solid #ef4444;
+.metric:first-child .metric-value {
+    color: #fbbf24; /* Destaca en dorado */
 }
 
-/* borde naranja para vencen en 3 dias */
-.metric.orange {
-    border-left: 6px solid #f97316;
-}
+.metric.orange .metric-value { color: #c48b1a; }
+.metric.blue .metric-value { color: #2c6fad; }
+.metric.green .metric-value { color: #1a4a2e; }
 
-/* borde azul para vencen en 5 dias */
-.metric.blue {
-    border-left: 6px solid #3b82f6;
-}
-
-/* borde verde para pagadas */
-.metric.green {
-    border-left: 6px solid #22c55e;
-}
-
-/* grilla de alertas */
+/* =========================
+   PANEL DE ALERTAS
+========================= */
 .alerts {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    gap: 16px;
 }
 
-/* titulo de cada alerta */
+.alert {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+}
+
 .alert-title {
-    font-size: 17px;
+    font-family: "Playfair Display", serif;
+    font-size: 16px;
     font-weight: 700;
-    margin-bottom: 14px;
+    color: #1a4a2e;
+    margin-bottom: 16px;
 }
 
-/* lista dentro de alertas */
-.alert ul {
-    padding-left: 20px;
+.alert.red .alert-title {
+    color: #9b1c1c;
 }
 
-/* texto de cada item de alerta */
 .alert li {
-    margin-bottom: 8px;
-    color: #374151;
+    padding: 12px 4px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    font-size: 13px;
+    color: #3a3835;
 }
 
-/* alerta roja */
-.alert.red {
-    border-top: 5px solid #ef4444;
+/* =========================
+   TABLAS Y CONTENEDORES DE FORMULARIO
+========================= */
+.table-card, .form-card {
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
 }
 
-/* alerta naranja */
-.alert.orange {
-    border-top: 5px solid #f97316;
+.form-card {
+    padding: 30px;
+    max-width: 700px;
+    margin: 0 auto;
+    width: 100%;
 }
 
-/* tarjeta que contiene la tabla */
-.table-card {
-    overflow-x: auto;
-}
-
-/* titulo de la tabla */
 .table-header {
+    padding: 24px 28px;
+    font-family: "Playfair Display", serif;
     font-size: 20px;
     font-weight: 800;
-    margin-bottom: 18px;
+    color: #1a4a2e;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-/* tabla general */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-/* encabezado de tabla */
 th {
     text-align: left;
-    padding: 14px;
-    font-size: 14px;
-    color: #6b7280;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 28px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #7a7670;
+    background: rgba(0,0,0,0.02);
 }
 
-/* celdas de tabla */
 td {
-    padding: 16px 14px;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-/* efecto al pasar el mouse por una fila */
-tr:hover {
-    background: #f9fafb;
-}
-
-/* etiqueta de estado */
-.badge {
-    padding: 6px 12px;
-    border-radius: 999px;
+    padding: 18px 28px;
+    border-top: 1px solid rgba(0,0,0,0.04);
     font-size: 13px;
-    font-weight: 700;
+    color: #2a2825;
 }
 
-/* estado rojo */
-.badge.red {
-    background: #fee2e2;
-    color: #b91c1c;
+tbody tr:hover {
+    background: rgba(26, 74, 46, 0.03); /* Hover sutil con color de marca */
 }
 
-/* estado naranja */
-.badge.orange {
-    background: #ffedd5;
-    color: #c2410c;
+/* BADGES MODERNOS (Píldoras semitransparentes) */
+.badge {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    display: inline-block;
 }
 
-/* estado azul */
-.badge.blue {
-    background: #dbeafe;
-    color: #1d4ed8;
+.badge.red { background: #fef2f2; color: #9b1c1c; border: 1px solid #fee2e2; }
+.badge.orange { background: #fffbeb; color: #78350f; border: 1px solid #fef3c7; }
+.badge.blue { background: #eff6ff; color: #1e3a5f; border: 1px solid #dbeafe; }
+.badge.green { background: #f0fdf4; color: #14532d; border: 1px solid #dcfce7; }
+
+/* Formulario interno en Registrar Factura */
+.factura-form {
+    margin-top: 20px;
 }
 
-/* estado verde */
-.badge.green {
-    background: #dcfce7;
-    color: #15803d;
+/* Responsive intacto y pulido */
+@media (max-width: 1100px) {
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .alerts { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    .sidebar { width: 100%; min-height: auto; position: relative; }
+    .topbar { flex-direction: column; gap: 12px; align-items: stretch; }
+    .search { width: 100%; }
+    .metrics { grid-template-columns: 1fr; }
+    .content { padding: 20px; }
 }
 
 /* botones de accion en la tabla */
