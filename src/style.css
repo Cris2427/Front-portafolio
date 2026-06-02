@@ -592,3 +592,12 @@ tbody tr:hover {
 .btn-accion:hover {
     opacity: 0.9;
 }
+
+.btn-accion.ver {
+    background: #0891b2;
+}
+
+.btn-accion.subir {
+    background: #6b7280;
+    display: inline-block;
+}

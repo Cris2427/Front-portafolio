@@ -39,7 +39,6 @@ function Facturas() {
         setCargando(false);
       }
     }
-
     cargarFacturas();
   }, []);
 
@@ -57,6 +56,41 @@ function Facturas() {
       console.error(err);
     }
   }
+
+    async function subirDocumento(id, archivo) {
+      if (!archivo) return;
+
+      const formData = new FormData();
+      formData.append("archivo", archivo);
+
+      try {
+        const { data } = await api.post(
+          `/facturas/${id}/documento`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        setFacturas((prev) =>
+          prev.map((factura) => (factura.id === id ? data : factura))
+        );
+      } catch (err) {
+        setError("No se pudo subir el documento.");
+        console.error(err);
+      }
+    }
+
+    async function verDocumento(id) {
+      try {
+        const { data } = await api.get(`/facturas/${id}/documento`, {
+          responseType: "blob",
+        });
+        const url = URL.createObjectURL(data);
+        window.open(url, "_blank");
+      } catch (err) {
+        setError("No se pudo abrir el documento.");
+        console.error(err);
+      }
+    }
+
 
   // Lógica para el buscador de la barra superior (Layout)
   const facturasFiltradas = facturas.filter((factura) =>
@@ -95,6 +129,16 @@ function Facturas() {
                   </span>
                 </td>
                 <td>
+                  {factura.urlDocumento && (
+                    <button
+                      type="button"
+                      className="btn-accion ver"
+                      onClick={() => verDocumento(factura.id)}
+                    >
+                      Ver PDF
+                    </button>
+                  )}
+
                   <button
                     type="button"
                     className="btn-accion editar"
@@ -102,15 +146,28 @@ function Facturas() {
                   >
                     Editar
                   </button>
+
                   {esAdmin && (
                     <button
                       type="button"
                       className="btn-accion eliminar"
                       onClick={() => eliminarFactura(factura.id)}
-                      >
-                        Eliminar
+                    >
+                      Eliminar
                     </button>
                   )}
+
+                  <label className="btn-accion subir">
+                    Subir PDF
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      style={{ display: "none" }}
+                      onChange={(e) =>
+                        subirDocumento(factura.id, e.target.files[0])
+                      }
+                    />
+                  </label>
                 </td>
               </tr>
             ))}
