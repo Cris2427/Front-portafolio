@@ -9,177 +9,93 @@ function Dashboard() {
     async function cargarFacturas() {
       try {
         const { data } = await api.get("/facturas");
-        console.log(data); // revisa cómo llega
-
         setFacturas(data);
       } catch (error) {
-        console.error(
-          "Error al cargar facturas",
-          error
-        );
+        console.error("Error al cargar facturas", error);
       }
     }
 
     cargarFacturas();
   }, []);
 
-  const hoy = new Date();
-  hoy.setHours(0, 0, 0, 0);
+  // Obtenemos la fecha de hoy en formato "YYYY-MM-DD" para evitar problemas de zona horaria
+  const hoy = new Date().toISOString().split("T")[0];
 
-  const pagadas = facturas.filter(
-    (factura) =>
-      factura.estado === "PAGADA"
-  );
+  const pagadas = facturas.filter((factura) => factura.estado === "PAGADA");
 
-  const pendientes = facturas.filter(
-    (factura) =>
-      factura.estado === "PENDIENTE"
-  );
+  const pendientes = facturas.filter((factura) => factura.estado === "PENDIENTE");
 
+  // Vencen hoy SOLO si la fecha coincide y NO están pagadas
   const vencenHoy = facturas.filter(
-    (factura) => {
-      if (!factura.fechaVencimiento)
-        return false;
-
-      const fechaFactura = new Date(
-        factura.fechaVencimiento
-      );
-
-      fechaFactura.setHours(0, 0, 0, 0);
-
-      return (
-        fechaFactura.getTime() ===
-        hoy.getTime()
-      );
-    }
+    (factura) => factura.fechaVencimiento === hoy && factura.estado !== "PAGADA"
   );
 
-  const badgeColor = (estado) => {
-    switch (estado) {
-      case "PAGADA":
-        return "green";
-      case "PENDIENTE":
-        return "orange";
-      case "VENCIDA":
-        return "red";
-      default:
-        return "blue";
-    }
+  // Evaluamos la factura completa para saber qué color le toca
+  const badgeColor = (factura) => {
+    if (factura.estado === "PAGADA") return "green";
+    if (factura.fechaVencimiento === hoy && factura.estado !== "PAGADA") return "red";
+    if (factura.estado === "PENDIENTE") return "orange";
+    return "blue";
   };
 
   return (
     <Layout>
       <section className="metrics">
         <div className="card metric red">
-          <div className="metric-title">
-            Vencen Hoy
-          </div>
-          <div className="metric-value">
-            {vencenHoy.length}
-          </div>
+          <div className="metric-title">Vencen Hoy</div>
+          <div className="metric-value">{vencenHoy.length}</div>
         </div>
 
         <div className="card metric orange">
-          <div className="metric-title">
-            Total Facturas
-          </div>
-          <div className="metric-value">
-            {facturas.length}
-          </div>
+          <div className="metric-title">Total Facturas</div>
+          <div className="metric-value">{facturas.length}</div>
         </div>
 
         <div className="card metric blue">
-          <div className="metric-title">
-            Pendientes
-          </div>
-          <div className="metric-value">
-            {pendientes.length}
-          </div>
+          <div className="metric-title">Pendientes</div>
+          <div className="metric-value">{pendientes.length}</div>
         </div>
 
         <div className="card metric green">
-          <div className="metric-title">
-            Pagadas
-          </div>
-          <div className="metric-value">
-            {pagadas.length}
-          </div>
+          <div className="metric-title">Pagadas</div>
+          <div className="metric-value">{pagadas.length}</div>
         </div>
       </section>
 
       <section className="alerts">
         <div className="card alert red">
-          <div className="alert-title">
-            Facturas que vencen hoy
-          </div>
-
+          <div className="alert-title">Facturas que vencen hoy</div>
           <ul>
             {vencenHoy.length > 0 ? (
-              vencenHoy.map(
-                (factura) => (
-                  <li
-                    key={factura.id}
-                  >
-                    Folio{" "}
-                    {factura.folio} -{" "}
-                    {
-                      factura.emisor
-                    }
-                  </li>
-                )
-              )
+              vencenHoy.map((factura) => (
+                <li key={factura.id}>
+                  Folio {factura.folio} - {factura.emisor}
+                </li>
+              ))
             ) : (
-              <li>
-                No hay facturas
-                que vencen hoy
-              </li>
+              <li>No hay facturas que vencen hoy</li>
             )}
           </ul>
         </div>
 
         <div className="card alert orange">
-          <div className="alert-title">
-            Facturas pendientes
-          </div>
-
+          <div className="alert-title">Facturas pendientes</div>
           <ul>
-            {pendientes.length >
-            0 ? (
-              pendientes
-                .slice(0, 5)
-                .map(
-                  (factura) => (
-                    <li
-                      key={
-                        factura.id
-                      }
-                    >
-                      Folio{" "}
-                      {
-                        factura.folio
-                      }{" "}
-                      -{" "}
-                      {
-                        factura.emisor
-                      }
-                    </li>
-                  )
-                )
+            {pendientes.length > 0 ? (
+              pendientes.slice(0, 5).map((factura) => (
+                <li key={factura.id}>
+                  Folio {factura.folio} - {factura.emisor}
+                </li>
+              ))
             ) : (
-              <li>
-                No hay facturas
-                pendientes
-              </li>
+              <li>No hay facturas pendientes</li>
             )}
           </ul>
         </div>
       </section>
 
       <section className="card table-card">
-        <div className="table-header">
-          Facturas
-        </div>
-
+        <div className="table-header">Facturas</div>
         <table>
           <thead>
             <tr>
@@ -190,55 +106,30 @@ function Dashboard() {
               <th>Estado</th>
             </tr>
           </thead>
-
           <tbody>
-            {facturas.map(
-              (factura) => (
-                <tr
-                  key={
-                    factura.id
-                  }
-                >
+            {facturas.length > 0 ? (
+              facturas.map((factura) => (
+                <tr key={factura.id}>
+                  <td>{factura.folio}</td>
+                  <td>{factura.emisor}</td>
                   <td>
-                    {
-                      factura.folio
-                    }
+                    ${Number(factura.montoTotal || 0).toLocaleString("es-CL")}
                   </td>
-
+                  <td>{factura.fechaVencimiento}</td>
                   <td>
-                    {
-                      factura.emisor
-                    }
-                  </td>
-
-                  <td>
-                    $
-                    {Number(
-                      factura.montoTotal
-                    ).toLocaleString(
-                      "es-CL"
-                    )}
-                  </td>
-
-                  <td>
-                    {
-                      factura.fechaVencimiento
-                    }
-                  </td>
-
-                  <td>
-                    <span
-                      className={`badge ${badgeColor(
-                        factura.estado
-                      )}`}
-                    >
-                      {
-                        factura.estado
-                      }
+                    {/* Le pasamos el objeto factura completo a la función de color */}
+                    <span className={`badge ${badgeColor(factura)}`}>
+                      {factura.estado}
                     </span>
                   </td>
                 </tr>
-              )
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>
+                  No hay facturas registradas
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

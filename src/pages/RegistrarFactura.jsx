@@ -1,6 +1,6 @@
 import { useState } from "react";
-import api from "../api/api.js";
 import Layout from "../components/Layout.jsx";
+import api from "../api/api.js";
 
 const initialForm = {
   folio: "",
@@ -19,7 +19,6 @@ function RegistrarFactura() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setForm({
       ...form,
       [name]: value,
@@ -47,10 +46,13 @@ function RegistrarFactura() {
       setMensaje("Factura registrada correctamente");
       setForm(initialForm);
     } catch (err) {
-      setError("No se pudo registrar la factura");
-      console.error(err);
+      const detalle =
+        err.response?.data?.mensaje ||
+        err.response?.data?.message ||
+        "No se pudo registrar la factura";
+      setError(detalle);
     }
-  }; // <--- Llave corregida: Aquí termina handleSubmit
+  };
 
   return (
     <Layout>
@@ -97,7 +99,7 @@ function RegistrarFactura() {
           </div>
 
           <div className="input">
-            <label htmlFor="fechaEmision">Fecha de emision</label>
+            <label htmlFor="fechaEmision">Fecha de emisión</label>
             <input
               id="fechaEmision"
               name="fechaEmision"
@@ -154,6 +156,6 @@ function RegistrarFactura() {
       </section>
     </Layout>
   );
-} 
+}
 
 export default RegistrarFactura;
