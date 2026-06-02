@@ -513,3 +513,27 @@ tr:hover {
     background: #dcfce7;
     color: #15803d;
 }
+
+/* botones de accion en la tabla */
+.btn-accion {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 6px;
+    color: white;
+}
+
+.btn-accion.editar {
+    background: #2563eb;
+}
+
+.btn-accion.eliminar {
+    background: #dc2626;
+}
+
+.btn-accion:hover {
+    opacity: 0.9;
+}

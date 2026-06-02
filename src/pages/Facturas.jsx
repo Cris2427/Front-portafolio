@@ -20,6 +20,8 @@ function Facturas() {
   const [busqueda, setBusqueda] = useState("");
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(true);
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+  const esAdmin = usuario.rol === "ROLE_ADMINISTRADOR";
 
   useEffect(() => {
     async function cargarFacturas() {
@@ -35,6 +37,20 @@ function Facturas() {
 
     cargarFacturas();
   }, []);
+
+    async function eliminarFactura(id) {
+    const confirmar = window.confirm(
+      "¿Seguro que quieres elminar esta factura?"
+    );
+    if (!confirmar) return;
+
+    try {
+      await api.delete(`/facturas/${id}`);
+      setFacturas((prev) => prev.filter((factura) => factura.id !== id));
+    } catch (err) {
+      setError("No se pudo eliminar la factura.")
+    }
+  }
 
   const facturasFiltradas = facturas.filter((factura) =>
     String(factura.folio).toLowerCase().includes(busqueda.toLowerCase())
@@ -54,6 +70,7 @@ function Facturas() {
               <th>Monto</th>
               <th>Vencimiento</th>
               <th>Estado</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -67,6 +84,17 @@ function Facturas() {
                   <span className={`badge ${colorEstado(factura.estado)}`}>
                     {factura.estado}
                   </span>
+                </td>
+                <td>
+                  {esAdmin && (
+                    <button
+                      type="button"
+                      className="btn-accion eliminar"
+                      onClick={() => eliminarFactura(factura.id)}
+                      >
+                        Eliminar
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
