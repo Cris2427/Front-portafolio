@@ -41,6 +41,14 @@ function App() {
           </RutaPrivada>
         }
       />
+      <Route 
+        path="/facturas/:id/editar"
+        element={
+          <RutaPrivada>
+            <RegistrarFactura />
+          </RutaPrivada>
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

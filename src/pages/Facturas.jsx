@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/api.js";
 import Layout from "../components/Layout.jsx";
 
@@ -23,6 +24,7 @@ function Facturas() {
   const [cargando, setCargando] = useState(true);
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
   const esAdmin = usuario.rol === "ROLE_ADMINISTRADOR";
+    const navigate = useNavigate();
 
   useEffect(() => {
     async function cargarFacturas() {
@@ -93,6 +95,13 @@ function Facturas() {
                   </span>
                 </td>
                 <td>
+                  <button
+                    type="button"
+                    className="btn-accion editar"
+                    onClick={() => navigate(`/facturas/${factura.id}/editar`)}
+                  >
+                    Editar
+                  </button>
                   {esAdmin && (
                     <button
                       type="button"

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout.jsx";
 import api from "../api/api.js";
 
@@ -13,9 +14,37 @@ const initialForm = {
 };
 
 function RegistrarFactura() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const esEdicion = Boolean(id);
+
   const [form, setForm] = useState(initialForm);
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
+
+    useEffect(() => {
+    if (!id) return;
+
+    async function cargarFactura() {
+      try {
+        const { data } = await api.get(`/facturas/${id}`);
+        setForm({
+          folio: data.folio ?? "",
+          emisor: data.emisor ?? "",
+          montoTotal: data.montoTotal ?? "",
+          fechaEmision: data.fechaEmision ?? "",
+          fechaVencimiento: data.fechaVencimiento ?? "",
+          estado: data.estado ?? "PENDIENTE",
+          usuarioId: data.usuarioId ?? "",
+        });
+      } catch (err) {
+        setError("No se pudo cargar la factura a editar.");
+        console.error(err);
+      }
+    }
+
+    cargarFactura();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,15 +70,19 @@ function RegistrarFactura() {
     };
 
     try {
-      await api.post("/facturas", factura);
-
-      setMensaje("Factura registrada correctamente");
-      setForm(initialForm);
+      if (esEdicion) {
+        await api.put(`/facturas/${id}`, factura);
+        navigate("/facturas");
+      } else {
+        await api.post("/facturas", factura);
+        setMensaje("Factura registrada correctamente");
+        setForm(initialForm);
+      }
     } catch (err) {
       const detalle =
         err.response?.data?.mensaje ||
         err.response?.data?.message ||
-        "No se pudo registrar la factura";
+        "No se pudo guardar la factura";
       setError(detalle);
     }
   };
@@ -57,7 +90,9 @@ function RegistrarFactura() {
   return (
     <Layout>
       <section className="card form-card">
-        <div className="table-header">Registrar factura</div>
+        <div className="table-header">
+          {esEdicion ? "Editar factura" : "Registrar factura"}
+        </div>
 
         {mensaje && <div className="success">{mensaje}</div>}
         {error && <div className="error visible">{error}</div>}
@@ -150,7 +185,7 @@ function RegistrarFactura() {
           </div>
 
           <button className="btn-login" type="submit">
-            Registrar factura
+            {esEdicion ? "Guardar cambios" : "Registrar factura"}
           </button>
         </form>
       </section>
