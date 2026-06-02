@@ -47,8 +47,10 @@ function RegistrarFactura() {
       setMensaje("Factura registrada correctamente");
       setForm(initialForm);
     } catch (err) {
-
-  };
+      setError("No se pudo registrar la factura");
+      console.error(err);
+    }
+  }; // <--- Llave corregida: Aquí termina handleSubmit
 
   return (
     <Layout>
@@ -152,7 +154,6 @@ function RegistrarFactura() {
       </section>
     </Layout>
   );
-}
-}
+} 
 
 export default RegistrarFactura;

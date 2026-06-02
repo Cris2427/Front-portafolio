@@ -34,7 +34,7 @@ function App() {
         }
       />
       <Route
-        path="/registrar-factura"
+        path="/registrarfactura"
         element={
           <RutaPrivada>
             <RegistrarFactura />
