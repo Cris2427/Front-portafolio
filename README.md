@@ -1,16 +1,171 @@
-# React + Vite
+# Sistema de Gestión de Facturas — Agrícola El Capricho SPA (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web (SPA) para la gestión de facturas de **Agrícola El Capricho SPA**.
+Permite registrar, listar, editar y eliminar facturas, adjuntar documentos PDF,
+gestionar una papelera con restauración y consultar el historial de cambios de
+estado de cada factura.
 
-Currently, two official plugins are available:
+Este repositorio contiene **solo el frontend**. Consume una API REST construida
+con Spring Boot (proyecto `proyecto-titulo-`) que corre por defecto en
+`http://localhost:8081`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🛠️ Tecnologías
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Herramienta | Uso |
+|---|---|
+| [React 19](https://react.dev/) | Librería de interfaz |
+| [Vite 8](https://vite.dev/) | Bundler y servidor de desarrollo |
+| [React Router 7](https://reactrouter.com/) | Enrutamiento (SPA) |
+| [Axios](https://axios-http.com/) | Cliente HTTP (con interceptor de JWT) |
+| ESLint | Análisis estático de código |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📋 Requisitos previos
+
+1. **Node.js 18+** y npm.
+2. El **backend** (`proyecto-titulo-`) corriendo en `http://localhost:8081`.
+3. **PostgreSQL** activo con la base `agricola_db` (según la configuración del backend).
+
+> El backend acepta peticiones por CORS desde `http://localhost:5173` y
+> `http://localhost:5174` (los puertos por defecto de Vite).
+
+---
+
+## 🚀 Instalación y ejecución
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/Cris2427/Front-portafolio.git
+cd front-portafolio
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Levantar el servidor de desarrollo
+npm run dev
+```
+
+La app queda disponible en **http://localhost:5173**.
+
+### Scripts disponibles
+
+| Comando | Descripción |
+|---|---|
+| `npm run dev` | Servidor de desarrollo con recarga en caliente (HMR) |
+| `npm run build` | Compila la versión optimizada de producción en `dist/` |
+| `npm run preview` | Sirve localmente el build de producción |
+| `npm run lint` | Ejecuta ESLint sobre el proyecto |
+
+---
+
+## 🔐 Autenticación
+
+La API protege todos los endpoints con **JWT**, excepto `/user/login` y
+`/user/registro`. El flujo es:
+
+1. El usuario inicia sesión en `/login` (`POST /user/login`).
+2. El token se guarda en `localStorage` junto con los datos del usuario.
+3. El cliente Axios (`src/api/api.js`) tiene un **interceptor** que adjunta
+   automáticamente el header `Authorization: Bearer <token>` en cada petición.
+
+### No hay usuario por defecto
+
+La base de datos no incluye un usuario inicial; debes **registrar uno** apuntando
+directamente a la API. Ejemplo (PowerShell) para crear un administrador:
+
+```powershell
+$body = @{
+  nombre   = "Admin"
+  correo   = "admin@agricola.cl"
+  password = "admin1234"
+  roles    = @{ nameRol = "ROLE_ADMINISTRADOR" }
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:8081/user/registro" -Method Post -ContentType "application/json" -Body $body
+```
+
+Luego se inicia sesión con ese correo y contraseña desde la pantalla de login.
+
+### Roles
+
+| Rol | Permisos |
+|---|---|
+| `ROLE_ADMINISTRADOR` | Todo, incluido eliminar facturas, ver la papelera y restaurar |
+| `ROLE_EJECUTIVO` | Crear, listar, editar facturas y documentos; sin acceso a eliminar/papelera |
+
+---
+
+## ✨ Funcionalidades
+
+- **Login** con manejo de errores y estado de carga.
+- **Dashboard** con métricas (total, pendientes, pagadas, vencen hoy) y alertas.
+- **Listado de facturas** con búsqueda por folio y badge de color según el estado
+  (`PENDIENTE` / `PROGRAMADA` / `PAGADA`).
+- **Registrar factura** (`POST /facturas`).
+- **Editar factura** reutilizando el mismo formulario (`PUT /facturas/:id`).
+- **Eliminar factura** (borrado lógico, solo administrador).
+- **Papelera**: ver eliminadas y **restaurarlas** (solo administrador).
+- **Historial de estados** de cada factura.
+- **Documentos PDF**: subir (multipart) y ver el documento adjunto de una factura.
+
+---
+
+## 🗺️ Rutas de la aplicación
+
+| Ruta | Vista | Acceso |
+|---|---|---|
+| `/login` | Inicio de sesión | Pública |
+| `/` | Dashboard | Autenticado |
+| `/facturas` | Listado de facturas | Autenticado |
+| `/registrarfactura` | Registrar factura | Autenticado |
+| `/facturas/:id/editar` | Editar factura | Autenticado |
+| `/facturas/:id/historial` | Historial de estados | Autenticado |
+| `/papelera` | Papelera de facturas | Solo administrador |
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+src/
+├── api/
+│   └── api.js            # Instancia de Axios + interceptor de JWT
+├── components/
+│   └── Layout.jsx        # Sidebar + topbar (estructura común)
+├── pages/
+│   ├── Login.jsx         # Inicio de sesión
+│   ├── Dashboard.jsx     # Métricas y alertas
+│   ├── Facturas.jsx      # Listado + acciones (editar, eliminar, PDF, historial)
+│   ├── RegistrarFactura.jsx  # Formulario de crear / editar
+│   ├── Papelera.jsx      # Facturas eliminadas + restaurar
+│   └── Historial.jsx     # Historial de cambios de estado
+├── App.jsx               # Definición de rutas y rutas privadas
+├── main.jsx              # Punto de entrada
+└── style.css             # Estilos globales
+```
+
+---
+
+## 🔗 API consumida (facturas)
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| `GET` | `/facturas` | Listar facturas activas |
+| `GET` | `/facturas/:id` | Obtener una factura |
+| `POST` | `/facturas` | Crear factura |
+| `PUT` | `/facturas/:id` | Actualizar factura |
+| `DELETE` | `/facturas/:id` | Eliminar (lógico) — solo admin |
+| `GET` | `/facturas/papelera` | Listar eliminadas — solo admin |
+| `PUT` | `/facturas/:id/restaurar` | Restaurar — solo admin |
+| `GET` | `/facturas/:id/historial` | Historial de estados |
+| `POST` | `/facturas/:id/documento` | Subir PDF (campo `archivo`) |
+| `GET` | `/facturas/:id/documento` | Ver PDF |
+
+
+## Equipo
+
+Proyecto de título desarrollado en equipo.
+Integrantes: Camila Malhue, Yesenia Jara y Cristian Tapia
