@@ -48,6 +48,11 @@ function Layout({ children, searchValue = "", onSearchChange }) {
               Papelera
             </NavLink>
           )}
+          {esAdmin && (
+            <NavLink to="/usuarios" className="nav-item">
+              Usuarios
+            </NavLink>
+          )}
         </nav>
       </aside>
 
