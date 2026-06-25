@@ -4,6 +4,7 @@ import Facturas from "./pages/Facturas"
 import Login from "./pages/Login"
 import RegistrarFactura from "./pages/RegistrarFactura";
 import Papelera from "./pages/Papelera";
+import GestionUsuarios from "./pages/GestionUsuarios";
 
 function RutaPrivada({ children}) {
    const token = localStorage.getItem("token");
@@ -50,7 +51,7 @@ function App() {
           </RutaPrivada>
         }
       />
-            <Route
+      <Route
         path="/papelera"
         element={
           <RutaPrivada>
@@ -58,6 +59,15 @@ function App() {
           </RutaPrivada>
         }
       />
+      <Route
+        path="/usuarios"
+        element = {
+          <RutaPrivada>
+            <GestionUsuarios />
+          </RutaPrivada>
+        }
+      />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

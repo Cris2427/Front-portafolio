@@ -13,7 +13,8 @@ function obtenerIniciales(nombre = "Usuario") {
 function Layout({ children, searchValue = "", onSearchChange }) {
   const navigate = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-  const esAdmin = usuario.rol === "ROLE_ADMINISTRADOR";
+  const puedeModificar = usuario.rol === "ROLE_ADMINISTRADOR" || usuario.rol === "ROLE_ADMIN";
+  const esAdmin = usuario.rol === "ROLE_ADMIN";
 
   function cerrarSesion() {
     localStorage.removeItem("token");
