@@ -2,10 +2,24 @@ import { useEffect, useState } from "react";
 import api from "../api/api.js";
 import Layout from "../components/Layout.jsx";
 
+function infoRol(rol) {
+  switch (rol) {
+    case "ROLE_ADMIN":
+      return { texto: "Admin" };
+    case "ROLE_ADMINISTRADOR":
+      return { texto: "Administrador" };
+    case "ROLE_EJECUTIVO":
+      return { texto: "Ejecutivo" };
+    default:
+      return { texto: rol };
+  }
+}
+
 function GestionUsuarios() {
     const [usuarios, setUsuarios] = useState([]);
     const [error, setError] = useState(true);
-
+    const [cargando, setCargando] = useState(true);
+    
     // formulario de creacion de usuario
     const [nombre, setNombre] = useState("");
     const [correo, setCorreo] = useState("");
@@ -68,7 +82,7 @@ function GestionUsuarios() {
       <section className="card">
         <div className="table-header">Crear usuario</div>
         <form
-          onSubmit={crearUsuario}
+          onSubmit={crearUsuarios}
           style={{ padding: "16px", display: "grid", gap: "10px", maxWidth: "400px" }}
         >
           <input type="text" placeholder="Nombre" value={nombre}
@@ -103,7 +117,7 @@ function GestionUsuarios() {
               <tr key={u.id}>
                 <td>{u.nombre}</td>
                 <td>{u.email}</td>
-                <td>{u.rol}</td>
+                <td>{infoRol(u.rol).texto}</td>
                 <td>{u.activo ? "Sí" : "No"}</td>
                 <td>
                   {u.activo && (
