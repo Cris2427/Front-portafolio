@@ -22,9 +22,10 @@ function Facturas() {
   const [busqueda, setBusqueda] = useState("");
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(true);
+  const [proveedorFiltro, setProveedorFiltro] = useState("");
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
   const esAdmin = usuario.rol === "ROLE_ADMINISTRADOR";
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function cargarFacturas() {
@@ -91,11 +92,19 @@ function Facturas() {
       }
     }
 
+    // lista de proveedores unicos
+    const proveedores = [...new Set(facturas.map((factura) => factura.emisor))];
 
-  // Lógica para el buscador de la barra superior (Layout)
-  const facturasFiltradas = facturas.filter((factura) =>
-    factura.folio?.toString().toLowerCase().includes(busqueda.toLowerCase())
-  );
+    // filtra por folio y proveedor
+    const facturasFiltradas = facturas.filter((factura) => {
+      const coincideFolio = factura.folio
+        ?.toString()
+        .toLowerCase()
+        .includes(busqueda.toLowerCase());
+      const coincideProveedor =
+        proveedorFiltro === "" || factura.emisor === proveedorFiltro;
+      return coincideFolio && coincideProveedor;
+    });
 
   return (
     <Layout searchValue={busqueda} onSearchChange={setBusqueda}>
@@ -103,6 +112,23 @@ function Facturas() {
 
       <section className="card table-card">
         <div className="table-header">Facturas</div>
+        <div style={{ padding: "12px 16px" }}>
+          <label style={{ marginRight: "8px", fontWeight: "bold" }}>
+            Filtrar por proveedor
+          </label>
+          <select
+            value={proveedorFiltro}
+            onChange={(e) => setProveedorFiltro(e.target.value)}
+          >
+            <option value="">Todos</option>
+            {proveedores.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+
+        </div>
 
         <table>
           <thead>
