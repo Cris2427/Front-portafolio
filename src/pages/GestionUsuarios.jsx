@@ -25,6 +25,7 @@ function GestionUsuarios() {
     const [correo, setCorreo] = useState("");
     const [password, setPassword] = useState("");
     const [rol, setRol] = useState("ROLE_EJECUTIVO");
+    const [usuarioDesactivar, setUsuarioDesactivar] = useState(null);
 
     async function cargarUsuarios() {
         try{
@@ -64,15 +65,15 @@ function GestionUsuarios() {
     }
 
     async function desactivarUsuario(id) {
-        const confirmar = window.confirm("Desactivar este usuario?");
-        if (!confirmar) return;
-        try {
-            await api.delete(`/admin/usuarios/${id}`);
-            cargarUsuarios();
-        } catch (err) {
-            setError("No se pudo desactivar el usuario.")
-            console.error(err);
-        }
+      setError("");
+      try {
+        await api.delete(`/admin/usuarios/${id}`);
+        setUsuarioDesactivar(null);
+        cargarUsuarios();
+      } catch (err) {
+        setError("No se pudo desactivar el usuario.");
+        console.error(err);
+      }
     }
 
     return (
@@ -122,7 +123,7 @@ function GestionUsuarios() {
                 <td>
                   {u.activo && (
                     <button type="button" className="btn-accion eliminar"
-                      onClick={() => desactivarUsuario(u.id)}>
+                      onClick={() => setUsuarioDesactivar(u)}>
                       Desactivar
                     </button>
                   )}
@@ -137,6 +138,34 @@ function GestionUsuarios() {
           <p style={{ textAlign: "center", padding: "20px" }}>No hay usuarios.</p>
         )}
       </section>
+
+      {usuarioDesactivar && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+          display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
+        }}>
+          <div style={{
+            background: "#fff", padding: "24px", borderRadius: "12px",
+            maxWidth: "400px", width: "90%", boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+          }}>
+            <h3 style={{ marginTop: 0, color: "#1b5e20" }}>Desactivar usuario</h3>
+            <p>
+              ¿Desactivar a <strong>{usuarioDesactivar.nombre}</strong>?
+            </p>
+            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", marginTop: "20px" }}>
+              <button type="button" className="btn-accion"
+                style={{ background: "#999" }}
+                onClick={() => setUsuarioDesactivar(null)}>
+                Cancelar
+              </button>
+              <button type="button" className="btn-accion eliminar"
+                onClick={() => desactivarUsuario(usuarioDesactivar.id)}>
+                Desactivar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
