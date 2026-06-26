@@ -59,6 +59,9 @@ function RegistrarFactura() {
     setMensaje("");
     setError("");
 
+    //el usuario logeado
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
     const factura = {
       folio: form.folio,
       emisor: form.emisor,
@@ -66,7 +69,7 @@ function RegistrarFactura() {
       fechaEmision: form.fechaEmision,
       fechaVencimiento: form.fechaVencimiento,
       estado: form.estado,
-      usuarioId: Number(form.usuarioId),
+      usuarioId: usuario.id,
     };
 
     try {
@@ -169,19 +172,6 @@ function RegistrarFactura() {
               <option value="PROGRAMADA">Programada</option>
               <option value="PAGADA">Pagada</option>
             </select>
-          </div>
-
-          <div className="input">
-            <label htmlFor="usuarioId">ID usuario</label>
-            <input
-              id="usuarioId"
-              name="usuarioId"
-              type="number"
-              min="1"
-              value={form.usuarioId}
-              onChange={handleChange}
-              required
-            />
           </div>
 
           <button className="btn-login" type="submit">
