@@ -24,6 +24,8 @@ function Facturas() {
   const [cargando, setCargando] = useState(true);
   const [proveedorFiltro, setProveedorFiltro] = useState("");
   const [facturaEliminar, setFacturaEliminar] = useState(null);
+  const [historialFactura, setHistorialFactura] = useState(null);
+  const [historialDatos, setHistorialDatos] = useState([]);
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
   const puedeModificar = usuario.rol === "ROLE_ADMINISTRADOR"|| usuario.rol === "ROLE_ADMIN";
   const navigate = useNavigate();
@@ -86,6 +88,18 @@ function Facturas() {
         window.open(url, "_blank");
       } catch (err) {
         setError("No se pudo abrir el documento.");
+        console.error(err);
+      }
+    }
+
+    async function verHistorial(factura) {
+      setError("");
+      try {
+        const { data } = await api.get(`/facturas/${factura.id}/historial`);
+        setHistorialDatos(Array.isArray(data) ? data : []);
+        setHistorialFactura(factura);
+      } catch (err) {
+        setError("No se pudo cargar el historial.");
         console.error(err);
       }
     }
@@ -162,6 +176,13 @@ function Facturas() {
                       Ver PDF
                     </button>
                   )}
+                    <button
+                      type="button"
+                      className="btn-accion ver"
+                      onClick={() => verHistorial(factura)}
+                    >
+                      Historial
+                    </button>
 
                   {puedeModificar && (
                     <>
@@ -238,7 +259,52 @@ function Facturas() {
           </div>
         </div>
       )}
-    
+
+      {historialFactura && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+          display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
+        }}>
+          <div style={{
+            background: "#fff", padding: "24px", borderRadius: "12px",
+            maxWidth: "500px", width: "90%", boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+          }}>
+            <h3 style={{ marginTop: 0, color: "#1b5e20" }}>
+              Historial — Factura {historialFactura.folio}
+            </h3>
+
+            {historialDatos.length === 0 ? (
+              <p>Sin cambios de estado registrados.</p>
+            ) : (
+              <table style={{ width: "100%" }}>
+                <thead>
+                  <tr>
+                    <th>Anterior</th>
+                    <th>Nuevo</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {historialDatos.map((h) => (
+                    <tr key={h.id}>
+                      <td>{h.estadoAnterior}</td>
+                      <td>{h.estadoNuevo}</td>
+                      <td>{new Date(h.fechaCambio).toLocaleString("es-CL")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+              <button type="button" className="btn-accion" style={{ background: "#999" }}
+                onClick={() => setHistorialFactura(null)}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
