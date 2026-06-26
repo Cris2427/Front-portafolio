@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/api.js";
 import Layout from "../components/Layout.jsx";
 
-// Asignamos el color correcto dependiendo del estado real en la base de datos
+// asignamos el color correcto dependiendo del estado real en la base de datos
 function colorEstado(estado) {
   switch (estado) {
     case "PAGADA":
@@ -23,6 +23,7 @@ function Facturas() {
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(true);
   const [proveedorFiltro, setProveedorFiltro] = useState("");
+  const [facturaEliminar, setFacturaEliminar] = useState(null);
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
   const puedeModificar = usuario.rol === "ROLE_ADMINISTRADOR"|| usuario.rol === "ROLE_ADMIN";
   const navigate = useNavigate();
@@ -44,19 +45,16 @@ function Facturas() {
   }, []);
 
     async function eliminarFactura(id) {
-    const confirmar = window.confirm(
-      "¿Seguro que quieres eliminar esta factura?"
-    );
-    if (!confirmar) return;
-
-    try {
-      await api.delete(`/facturas/${id}`);
-      setFacturas((prev) => prev.filter((factura) => factura.id !== id));
-    } catch (err) {
-      setError("No se pudo eliminar la factura.")
-      console.error(err);
+      setError("");
+      try {
+        await api.delete(`/facturas/${id}`);
+        setFacturas((prev) => prev.filter((factura) => factura.id !== id));
+        setFacturaEliminar(null);
+      } catch (err) {
+        setError("No se pudo eliminar la factura.");
+        console.error(err);
+      }
     }
-  }
 
     async function subirDocumento(id, archivo) {
       if (!archivo) return;
@@ -178,7 +176,7 @@ function Facturas() {
                       <button
                         type="button"
                         className="btn-accion eliminar"
-                        onClick={() => eliminarFactura(factura.id)}
+                        onClick={() => setFacturaEliminar(factura)}
                       >
                         Eliminar
                       </button>
@@ -212,6 +210,35 @@ function Facturas() {
           </p>
         )}
       </section>
+
+      {facturaEliminar && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+          display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
+        }}>
+          <div style={{
+            background: "#fff", padding: "24px", borderRadius: "12px",
+            maxWidth: "400px", width: "90%", boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+          }}>
+            <h3 style={{ marginTop: 0, color: "#1b5e20" }}>Eliminar factura</h3>
+            <p>
+              ¿Enviar la factura <strong>{facturaEliminar.folio}</strong> a la papelera?
+            </p>
+            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", marginTop: "20px" }}>
+              <button type="button" className="btn-accion"
+                style={{ background: "#999" }}
+                onClick={() => setFacturaEliminar(null)}>
+                Cancelar
+              </button>
+              <button type="button" className="btn-accion eliminar"
+                onClick={() => eliminarFactura(facturaEliminar.id)}>
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    
     </Layout>
   );
 }
