@@ -24,7 +24,7 @@ function Facturas() {
   const [cargando, setCargando] = useState(true);
   const [proveedorFiltro, setProveedorFiltro] = useState("");
   const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-  const esAdmin = usuario.rol === "ROLE_ADMINISTRADOR";
+  const puedeModificar = usuario.rol === "ROLE_ADMINISTRADOR"|| usuario.rol === "ROLE_ADMIN";
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -165,35 +165,35 @@ function Facturas() {
                     </button>
                   )}
 
-                  <button
-                    type="button"
-                    className="btn-accion editar"
-                    onClick={() => navigate(`/facturas/${factura.id}/editar`)}
-                  >
-                    Editar
-                  </button>
+                  {puedeModificar && (
+                    <>
+                      <button
+                        type="button"
+                        className="btn-accion editar"
+                        onClick={() => navigate(`/facturas/${factura.id}/editar`)}
+                      >
+                        Editar
+                      </button>
 
-                  {esAdmin && (
-                    <button
-                      type="button"
-                      className="btn-accion eliminar"
-                      onClick={() => eliminarFactura(factura.id)}
-                    >
-                      Eliminar
-                    </button>
+                      <button
+                        type="button"
+                        className="btn-accion eliminar"
+                        onClick={() => eliminarFactura(factura.id)}
+                      >
+                        Eliminar
+                      </button>
+
+                      <label className="btn-accion subir">
+                        Subir PDF
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          style={{ display: "none" }}
+                          onChange={(e) => subirDocumento(factura.id, e.target.files[0])}
+                        />
+                      </label>
+                    </>
                   )}
-
-                  <label className="btn-accion subir">
-                    Subir PDF
-                    <input
-                      type="file"
-                      accept="application/pdf"
-                      style={{ display: "none" }}
-                      onChange={(e) =>
-                        subirDocumento(factura.id, e.target.files[0])
-                      }
-                    />
-                  </label>
                 </td>
               </tr>
             ))}
