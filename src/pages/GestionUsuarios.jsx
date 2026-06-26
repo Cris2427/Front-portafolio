@@ -76,6 +76,28 @@ function GestionUsuarios() {
       }
     }
 
+    async function activarUsuario(id) {
+      setError("");
+      try {
+        await api.put(`/admin/usuarios/${id}/activar`);
+        cargarUsuarios();
+      } catch (err) {
+        setError("No se pudo activar el usuario.");
+        console.error(err);
+      }
+    }
+
+    async function eliminarDefinitivo(id) {
+      setError("");
+      try {
+        await api.delete(`/admin/usuarios/${id}/definitivo`);
+        cargarUsuarios();
+      } catch (err) {
+        setError(err.response?.data?.mensaje || "No se pudo eliminar el usuario.");
+        console.error(err);
+      }
+    }
+
     return (
     <Layout>
       {error && <div className="error visible">{error}</div>}
@@ -121,11 +143,23 @@ function GestionUsuarios() {
                 <td>{infoRol(u.rol).texto}</td>
                 <td>{u.activo ? "Sí" : "No"}</td>
                 <td>
-                  {u.activo && (
+                  {u.activo ? (
                     <button type="button" className="btn-accion eliminar"
                       onClick={() => setUsuarioDesactivar(u)}>
                       Desactivar
                     </button>
+                  ) : (
+                    <>
+                      <button type="button" className="btn-accion editar"
+                        onClick={() => activarUsuario(u.id)}>
+                        Activar
+                      </button>
+                      <button type="button" className="btn-accion eliminar"
+                        title="Eliminar definitivo"
+                        onClick={() => eliminarDefinitivo(u.id)}>
+                        🗑️
+                      </button>
+                    </>
                   )}
                 </td>
               </tr>
