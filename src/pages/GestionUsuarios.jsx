@@ -17,7 +17,7 @@ function infoRol(rol) {
 
 function GestionUsuarios() {
     const [usuarios, setUsuarios] = useState([]);
-    const [error, setError] = useState(true);
+    const [error, setError] = useState("");
     const [cargando, setCargando] = useState(true);
     
     // formulario de creacion de usuario
