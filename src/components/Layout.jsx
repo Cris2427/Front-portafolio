@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 function obtenerIniciales(nombre = "Usuario") {
@@ -16,6 +17,8 @@ function Layout({ children, searchValue = "", onSearchChange }) {
   const puedeModificar = usuario.rol === "ROLE_ADMINISTRADOR" || usuario.rol === "ROLE_ADMIN";
   const esAdmin = usuario.rol === "ROLE_ADMIN";
 
+  const [menuAbierto, setMenuAbierto] = useState(false);
+
   function cerrarSesion() {
     localStorage.removeItem("token");
     localStorage.removeItem("tipoToken");
@@ -23,9 +26,13 @@ function Layout({ children, searchValue = "", onSearchChange }) {
     navigate("/login");
   }
 
+  function cerrarMenu() {
+    setMenuAbierto(false);
+  }
+
   return (
     <div className="app">
-      <aside className="sidebar">
+      <aside className={`sidebar ${menuAbierto ? "abierto" : ""}`}>
         <div className="logo">
           <span>Agricola</span>
           <span>El</span>
@@ -34,30 +41,40 @@ function Layout({ children, searchValue = "", onSearchChange }) {
         </div>
 
         <nav className="nav">
-          <NavLink to="/" end className="nav-item">
+          <NavLink to="/" end className="nav-item" onClick={cerrarMenu}>
             Dashboard
           </NavLink>
-          <NavLink to="/facturas" className="nav-item">
+          <NavLink to="/facturas" className="nav-item" onClick={cerrarMenu}>
             Facturas
           </NavLink>
-          <NavLink to="/registrarfactura" className="nav-item">
+          <NavLink to="/registrarfactura" className="nav-item" onClick={cerrarMenu}>
             Registrar factura
           </NavLink>
           {esAdmin && (
-            <NavLink to="/papelera" className="nav-item">
+            <NavLink to="/papelera" className="nav-item" onClick={cerrarMenu}>
               Papelera
             </NavLink>
           )}
           {esAdmin && (
-            <NavLink to="/usuarios" className="nav-item">
+            <NavLink to="/usuarios" className="nav-item" onClick={cerrarMenu}>
               Usuarios
             </NavLink>
           )}
         </nav>
       </aside>
 
+      {menuAbierto && <div className="overlay" onClick={cerrarMenu}></div>}
+
       <main className="main">
         <header className="topbar">
+          <button
+            className="boton-menu"
+            type="button"
+            onClick={() => setMenuAbierto(!menuAbierto)}
+          >
+            ☰
+          </button>
+
           <input
             type="text"
             className="search"

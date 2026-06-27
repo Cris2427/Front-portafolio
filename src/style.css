@@ -322,6 +322,10 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
+.boton-menu {
+  display: none;   /* oculto en escritorio */
+}
+
 .search {
     width: 320px;
     height: 44px;
@@ -562,11 +566,47 @@ tbody tr:hover {
 }
 
 @media (max-width: 768px) {
-    .sidebar { width: 100%; min-height: auto; position: relative; }
-    .topbar { flex-direction: column; gap: 12px; align-items: stretch; }
-    .search { width: 100%; }
+    /* Menu lateral como cajón deslizable */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 250px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1001;
+    }
+    .sidebar.abierto {
+        transform: translateX(0);
+    }
+
+    /* Botón menu visible */
+    .boton-menu {
+        display: block;
+        background: none;
+        border: none;
+        color: #0f2314;
+        font-size: 26px;
+        cursor: pointer;
+    }
+
+    /* Capa oscura detrás del menú */
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .topbar { flex-direction: row; align-items: center; gap: 12px; }
+    .search { flex: 1; }
     .metrics { grid-template-columns: 1fr; }
     .content { padding: 20px; }
+
+    .table-card { overflow-x: auto; }
+    table { min-width: 700px; }
+    .btn-accion { margin-bottom: 6px; }
 }
 
 /* botones de accion en la tabla */
