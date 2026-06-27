@@ -17,6 +17,22 @@ function colorEstado(estado) {
   }
 }
 
+function semaforoVencimiento(fechaVencimiento, estado) {
+  if (estado === "PAGADA") return { color: "green", texto: "Pagada" };
+
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  const vence = new Date(fechaVencimiento);
+  vence.setHours(0, 0, 0, 0);
+
+  const dias = Math.round((vence - hoy) / (1000 * 60 * 60 * 24));
+
+  if (dias <= 0) return { color: "red", texto: "Vencida / Hoy" };
+  if (dias <= 5) return { color: "orange", texto: `Vence en ${dias} día(s)` };
+  return { color: "green", texto: `${dias} días` };
+}
+
+
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
@@ -150,6 +166,7 @@ function Facturas() {
               <th>Monto</th>
               <th>Vencimiento</th>
               <th>Estado</th>
+              <th>Alerta</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -164,6 +181,11 @@ function Facturas() {
                 <td>
                   <span className={`badge ${colorEstado(factura.estado)}`}>
                     {factura.estado}
+                  </span>
+                </td>
+                <td>
+                  <span className={`badge ${semaforoVencimiento(factura.fechaVencimiento, factura.estado).color}`}>
+                    {semaforoVencimiento(factura.fechaVencimiento, factura.estado).texto}
                   </span>
                 </td>
                 <td>
