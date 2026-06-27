@@ -142,6 +142,8 @@ function RegistrarFactura() {
               id="fechaEmision"
               name="fechaEmision"
               type="date"
+              min="2000-01-01"
+              max="2100-12-31"
               value={form.fechaEmision}
               onChange={handleChange}
               required
@@ -154,6 +156,8 @@ function RegistrarFactura() {
               id="fechaVencimiento"
               name="fechaVencimiento"
               type="date"
+              min="2000-01-01"
+              max="2100-12-31"
               value={form.fechaVencimiento}
               onChange={handleChange}
               required
