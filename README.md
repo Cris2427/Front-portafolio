@@ -63,38 +63,29 @@ La app queda disponible en **http://localhost:5173**.
 
 ## 🔐 Autenticación
 
-La API protege todos los endpoints con **JWT**, excepto `/user/login` y
-`/user/registro`. El flujo es:
+La API protege todos los endpoints con **JWT**, excepto `/user/login`. El flujo es:
 
 1. El usuario inicia sesión en `/login` (`POST /user/login`).
 2. El token se guarda en `localStorage` junto con los datos del usuario.
 3. El cliente Axios (`src/api/api.js`) tiene un **interceptor** que adjunta
    automáticamente el header `Authorization: Bearer <token>` en cada petición.
 
-### No hay usuario por defecto
+### Usuario inicial y registro
 
-La base de datos no incluye un usuario inicial; debes **registrar uno** apuntando
-directamente a la API. Ejemplo (PowerShell) para crear un administrador:
+El registro público está **cerrado**: solo un usuario con rol **ADMIN** puede crear
+cuentas (desde la pantalla de Usuarios o `POST /admin/usuarios`).
 
-```powershell
-$body = @{
-  nombre   = "Admin"
-  correo   = "admin@agricola.cl"
-  password = "admin1234"
-  roles    = @{ nameRol = "ROLE_ADMINISTRADOR" }
-} | ConvertTo-Json
-
-Invoke-RestMethod -Uri "http://localhost:8081/user/registro" -Method Post -ContentType "application/json" -Body $body
-```
-
-Luego se inicia sesión con ese correo y contraseña desde la pantalla de login.
+El backend crea automáticamente un **usuario ADMIN inicial** en la primera ejecución,
+con el que se puede iniciar sesión y dar de alta al resto. Sus credenciales están
+definidas en el backend (`DataInitializer`) y deben cambiarse en un entorno real.
 
 ### Roles
 
 | Rol | Permisos |
 |---|---|
-| `ROLE_ADMINISTRADOR` | Todo, incluido eliminar facturas, ver la papelera y restaurar |
-| `ROLE_EJECUTIVO` | Crear, listar, editar facturas y documentos; sin acceso a eliminar/papelera |
+| `ROLE_ADMIN` | Todo + gestión de usuarios (crear, activar, desactivar, eliminar) |
+| `ROLE_ADMINISTRADOR` | Crear, editar y eliminar facturas; papelera, restaurar y proveedores |
+| `ROLE_EJECUTIVO` | Solo lectura: ver facturas, buscar, historial y documentos |
 
 ---
 
@@ -102,14 +93,17 @@ Luego se inicia sesión con ese correo y contraseña desde la pantalla de login.
 
 - **Login** con manejo de errores y estado de carga.
 - **Dashboard** con métricas (total, pendientes, pagadas, vencen hoy) y alertas.
-- **Listado de facturas** con búsqueda por folio y badge de color según el estado
-  (`PENDIENTE` / `PROGRAMADA` / `PAGADA`).
-- **Registrar factura** (`POST /facturas`).
-- **Editar factura** reutilizando el mismo formulario (`PUT /facturas/:id`).
-- **Eliminar factura** (borrado lógico, solo administrador).
-- **Papelera**: ver eliminadas y **restaurarlas** (solo administrador).
-- **Historial de estados** de cada factura.
-- **Documentos PDF**: subir (multipart) y ver el documento adjunto de una factura.
+- **Listado de facturas** con búsqueda por folio, **filtro por proveedor** y badge
+  de estado (`PENDIENTE` / `PROGRAMADA` / `PAGADA`).
+- **Semáforo de vencimiento** (rojo / amarillo / verde) según los días que faltan.
+- **Registrar / editar factura** con el mismo formulario.
+- **Eliminar factura** (borrado lógico) con modal de confirmación — ADMINISTRADOR / ADMIN.
+- **Papelera**: ver eliminadas y **restaurarlas** — ADMINISTRADOR / ADMIN.
+- **Historial de estados** de cada factura (en modal).
+- **Documentos PDF**: subir (multipart) y ver el documento adjunto.
+- **Gestión de usuarios** (solo ADMIN): crear, activar, desactivar y eliminar.
+- **Permisos por rol** reflejados en el menú y los botones.
+- **Diseño responsivo** con menú lateral desplegable en móvil.
 
 ---
 
@@ -120,10 +114,13 @@ Luego se inicia sesión con ese correo y contraseña desde la pantalla de login.
 | `/login` | Inicio de sesión | Pública |
 | `/` | Dashboard | Autenticado |
 | `/facturas` | Listado de facturas | Autenticado |
-| `/registrarfactura` | Registrar factura | Autenticado |
-| `/facturas/:id/editar` | Editar factura | Autenticado |
-| `/facturas/:id/historial` | Historial de estados | Autenticado |
-| `/papelera` | Papelera de facturas | Solo administrador |
+| `/registrarfactura` | Registrar factura | ADMINISTRADOR / ADMIN |
+| `/facturas/:id/editar` | Editar factura | ADMINISTRADOR / ADMIN |
+| `/papelera` | Papelera de facturas | ADMINISTRADOR / ADMIN |
+| `/usuarios` | Gestión de usuarios | Solo ADMIN |
+
+> El historial de estados se muestra en un **modal** dentro de la pantalla de
+> Facturas (no es una ruta aparte).
 
 ---
 
@@ -138,10 +135,10 @@ src/
 ├── pages/
 │   ├── Login.jsx         # Inicio de sesión
 │   ├── Dashboard.jsx     # Métricas y alertas
-│   ├── Facturas.jsx      # Listado + acciones (editar, eliminar, PDF, historial)
+│   ├── Facturas.jsx      # Listado + acciones (editar, eliminar, PDF, historial, filtro)
 │   ├── RegistrarFactura.jsx  # Formulario de crear / editar
 │   ├── Papelera.jsx      # Facturas eliminadas + restaurar
-│   └── Historial.jsx     # Historial de cambios de estado
+│   └── GestionUsuarios.jsx   # Gestión de usuarios (solo ADMIN)
 ├── App.jsx               # Definición de rutas y rutas privadas
 ├── main.jsx              # Punto de entrada
 └── style.css             # Estilos globales
@@ -163,6 +160,16 @@ src/
 | `GET` | `/facturas/:id/historial` | Historial de estados |
 | `POST` | `/facturas/:id/documento` | Subir PDF (campo `archivo`) |
 | `GET` | `/facturas/:id/documento` | Ver PDF |
+
+## 🔗 API consumida (usuarios — solo ADMIN)
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| `GET` | `/admin/usuarios` | Listar usuarios |
+| `POST` | `/admin/usuarios` | Crear usuario |
+| `DELETE` | `/admin/usuarios/:id` | Desactivar usuario |
+| `PUT` | `/admin/usuarios/:id/activar` | Reactivar usuario |
+| `DELETE` | `/admin/usuarios/:id/definitivo` | Eliminar definitivamente |
 
 
 ## Equipo
